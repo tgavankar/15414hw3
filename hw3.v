@@ -254,8 +254,12 @@ intros.
 induction l.
 simpl.
 reflexivity.
+
 simpl.
-rewrite <- IHl.
+
+assert (H: rev (l ++ n :: nil) = n :: rev l).
+
+(****************************NEED TO FINISH*******************************)
 Admitted.
 
 
@@ -267,14 +271,31 @@ Admitted.
 Theorem snoc_append : forall (l:natlist) (n:nat),
   snoc l n = l ++ [n].
 Proof.
-  (* FILL IN HERE *) Admitted.
+intros.
+induction l.
+reflexivity.
+simpl.
+rewrite <- IHl.
+reflexivity.
+Admitted.
 
 
 (*b*) (* 12 points *)
 Theorem distr_rev : forall l1 l2 : natlist,
   rev (l1 ++ l2) = (rev l2) ++ (rev l1).
 Proof.
-  (* FILL IN HERE *) Admitted.
+intros.
+induction l1.
+induction l2.
+simpl.
+reflexivity.
+simpl.
+rewrite app_nil_end.
+reflexivity.
+simpl.
+rewrite -> IHl1.
+(************ TO BE FINISHED ****************)
+Admitted.
 
 
 
@@ -326,7 +347,13 @@ Fixpoint remove_one (v:nat) (s:bag) : bag :=
 Theorem count_member_nonzero : forall (s : bag),
   ble_nat 1 (count 1 (1 :: s)) = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+intros.
+induction s.
+simpl.
+reflexivity.
+simpl.
+reflexivity.
+Admitted.
 
 
 
@@ -346,7 +373,12 @@ Proof.
 Theorem remove_decreases_count: forall (s : bag),
   ble_nat (count 0 (remove_one 0 s)) (count 0 s) = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+intros.
+induction s.
+simpl.
+reflexivity.
+(*******************TO BE FINISHED *************)
+Admitted.
 
 
 
@@ -363,4 +395,6 @@ Proof.
 
 Theorem rev_inj : forall (l1 l2 : natlist), rev l1 = rev l2 -> l1 = l2.
 Proof.
-  (* FILL IN HERE *) Admitted.
+intros.
+
+Admitted.
