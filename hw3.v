@@ -1,3 +1,9 @@
+(**
+Tanay Gavankar
+tgavanka
+15-414 F12
+*)
+
 (****************Homework 3************Due: 3pm Oct. 3rd*****************************************************)
 (*****To prove some of the following theorems, you may need to first prove some lemmas.***************************)
 (*****You are welcome to use whatever is proved in the class in Basics.v and Lists.v *****************************)
