@@ -23,12 +23,16 @@ Theorem andb_true_elim2 : forall b c : bool,
 Proof.
 intros.
 destruct c.
+(* Case c = true *)
 reflexivity.
+(* Case c = false *)
 rewrite <- H.
 destruct b.
+(* Case b = true *)
 reflexivity.
+(* Case b = false *)
 reflexivity.
-Admitted.
+Qed.
 
 (******************************* question 2*******************************************************16 points*)
 
@@ -42,7 +46,7 @@ reflexivity.
 simpl.
 rewrite -> IHn.
 reflexivity.
-Admitted.
+Qed.
 
 (*b*)
 Theorem plus_distr : forall n m: nat, S (n + m) = n + (S m).
@@ -58,7 +62,7 @@ reflexivity.
 simpl.
 rewrite <- IHn.
 reflexivity.
-Admitted.
+Qed.
 
 (*c*)
 Theorem plus_comm : forall n m : nat,
@@ -75,15 +79,36 @@ reflexivity.
 simpl.
 rewrite -> IHn.
 apply plus_distr.
-Admitted.
+Qed.
 (** [] *)
 
 (*d*)
 (** Translate your solution for [plus_comm] into an informal proof. *)
 
 (** Theorem: Addition is commutative.
+             forall n m : nat, n + m = m + n
  
-    Proof: (* FILL IN HERE *)
+    Proof: 
+    Induct on n and m.
+
+      n = 0, m = 0
+      0 + 0 = 0 + 0
+      0 = 0
+      True
+
+      n = 0
+      IH: 0 + m = m + 0
+      P(k+1) => 1 + m = 1 + (m+0)
+         By IH: 1 + m = 1 + (0+m)
+                1 + m = 1 + m
+                True
+
+      IH: n + m = m + n
+      P(k+1) => (1+n) + m = m + (1+n)
+                1 + (n + m) = m + (1+n)
+                By IH: 1 + (m + n) = m + (1+n)
+                By distr: 1 + m + n = 1 + m + n
+                True
 []
 *)
 
@@ -105,7 +130,7 @@ simpl.
 rewrite -> IHn.
 rewrite <- plus_distr.
 reflexivity.
-Admitted.
+Qed.
 
 
 (******************************* question 4*******************************************************8 points*)
@@ -122,7 +147,7 @@ assert (H1: n + m = m + n).
 apply plus_comm.
 rewrite <- H1.
 reflexivity.
-Admitted.
+Qed.
 
 (******************************* question 5*******************************************************10 points*)
 
@@ -173,7 +198,7 @@ simpl.
 rewrite -> plus_swap.
 rewrite -> mult_iden.
 reflexivity.
-Admitted.
+Qed.
 
 
 (******************************* question 6*******************************************************10 points*)
@@ -192,7 +217,7 @@ simpl.
 rewrite -> IHn.
 rewrite -> plus_assoc.
 reflexivity.
-Admitted.
+Qed.
 
 (***** Some definitions/notations for lists, as we saw in class *****)
 
@@ -244,7 +269,19 @@ reflexivity.
 simpl.
 rewrite -> IHl.
 reflexivity.
-Admitted.
+Qed.
+
+Lemma snoc_rev : forall (l:natlist) (n:nat), rev(snoc l n) = n::rev(l).
+Proof.
+intros.
+induction l.
+simpl.
+reflexivity.
+simpl.
+rewrite -> IHl.
+simpl.
+reflexivity.
+Qed.
 
 (*b*) (* 10 points *)
 Theorem rev_involutive : forall l : natlist,
@@ -254,13 +291,11 @@ intros.
 induction l.
 simpl.
 reflexivity.
-
 simpl.
-
-assert (H: rev (l ++ n :: nil) = n :: rev l).
-
-(****************************NEED TO FINISH*******************************)
-Admitted.
+rewrite -> snoc_rev.
+rewrite -> IHl.
+reflexivity.
+Qed.
 
 
 
@@ -277,7 +312,20 @@ reflexivity.
 simpl.
 rewrite <- IHl.
 reflexivity.
-Admitted.
+Qed.
+
+Lemma distr_snoc : forall (l1 l2 : natlist) (n:nat), snoc (l1 ++ l2) n = l1 ++ snoc l2 n.
+intros.
+induction l1.
+induction l2.
+simpl.
+reflexivity.
+simpl.
+reflexivity.
+simpl.
+rewrite IHl1.
+reflexivity.
+Qed.
 
 
 (*b*) (* 12 points *)
@@ -294,14 +342,9 @@ rewrite app_nil_end.
 reflexivity.
 simpl.
 rewrite -> IHl1.
-(************ TO BE FINISHED ****************)
-Admitted.
-
-
-
-
-
-
+rewrite -> distr_snoc.
+reflexivity.
+Qed.
 
 
 (***** Some definitions on bags, as we saw in class *****)
@@ -353,7 +396,7 @@ simpl.
 reflexivity.
 simpl.
 reflexivity.
-Admitted.
+Qed.
 
 
 
@@ -367,8 +410,6 @@ Proof.
     simpl.  reflexivity.
     simpl.  rewrite IHn'.  reflexivity.  Qed.
 
-
-
 (*b*) (* 10 points *)
 Theorem remove_decreases_count: forall (s : bag),
   ble_nat (count 0 (remove_one 0 s)) (count 0 s) = true.
@@ -377,17 +418,14 @@ intros.
 induction s.
 simpl.
 reflexivity.
-(*******************TO BE FINISHED *************)
-Admitted.
-
-
-
-
-
-
-
-
-
+destruct n.
+simpl.
+rewrite -> ble_n_Sn.
+reflexivity.
+simpl.
+rewrite IHs.
+reflexivity.
+Qed.
 
 
 
@@ -396,5 +434,8 @@ Admitted.
 Theorem rev_inj : forall (l1 l2 : natlist), rev l1 = rev l2 -> l1 = l2.
 Proof.
 intros.
-
-Admitted.
+rewrite <- (rev_involutive l2).
+rewrite <- (rev_involutive l1).
+rewrite <- H.
+reflexivity.
+Qed.
